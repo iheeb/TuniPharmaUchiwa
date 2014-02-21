@@ -6,7 +6,7 @@ package entities;
 
 /**
  *
- * @author HoussemEddine
+
  */
 public class Medicaments {
     
@@ -42,13 +42,15 @@ public class Medicaments {
         this.nom_med = nom_med;
     }
 
-   public String getClasse_med() {
+    public String getClasse_med() {
         return classe_med;
     }
 
     public void setClasse_med(String classe_med) {
         this.classe_med = classe_med;
     }
+
+    
 
     public String getDescription_med() {
         return description_med;
