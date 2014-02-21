@@ -100,4 +100,65 @@ public class MedicamentsDAO {
         }
     }
     
+    //  methode 
+       public List<Medicaments> RechercheParNom_Classe(String nom,String classe){
+
+   
+  List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
+
+        String requete = "select * from medicaments where nom ='"+nom+"' AND classe='"+classe+"'";
+        try {
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+
+            while(resultat.next()){
+                Medicaments medicaments =new Medicaments();
+                medicaments.setId_med(resultat.getInt(1));
+                medicaments.setReference_med(resultat.getString(2));
+                medicaments.setNom_med(resultat.getString(3));
+                medicaments.setClasse_med(resultat.getString(4).trim());
+                medicaments.setDescription_med(resultat.getString(5));
+                medicaments.setForme_med(resultat.getString(6));
+
+                listemedicaments.add(medicaments);
+            }
+            return listemedicaments;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement des medicaments "+ex.getMessage());
+            return null;
+        }
+
+       }
+       public List<Medicaments> RecherchePar_Classe(String classe){
+
+   
+  List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
+
+        String requete = "select * from medicaments where classe='"+classe+"'";
+        try {
+           Statement statement = MyConnection.getInstance().createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+          //  
+            while(resultat.next()){ 
+                Medicaments medicaments =new Medicaments();
+                medicaments.setId_med(resultat.getInt(1));
+                medicaments.setReference_med(resultat.getString(2));
+                medicaments.setNom_med(resultat.getString(3));
+                medicaments.setClasse_med(resultat.getString(4).trim());
+                medicaments.setDescription_med(resultat.getString(5));
+                medicaments.setForme_med(resultat.getString(6));
+
+                listemedicaments.add(medicaments);
+            }
+            return listemedicaments;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement des medicaments "+ex.getMessage());
+            return null;
+        }
+
+       }
+    
 }
