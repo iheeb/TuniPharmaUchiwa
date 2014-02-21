@@ -13,7 +13,7 @@ public class Medicaments {
     private int id_med;
     private String reference_med;
     private String nom_med;
-    private String categorie_med;
+    private String classe_med;
     private String description_med;
     private String forme_med;
 
@@ -42,12 +42,12 @@ public class Medicaments {
         this.nom_med = nom_med;
     }
 
-    public String getCategorie_med() {
-        return categorie_med;
+   public String getClasse_med() {
+        return classe_med;
     }
 
-    public void setCategorie_med(String categorie_med) {
-        this.categorie_med = categorie_med;
+    public void setClasse_med(String classe_med) {
+        this.classe_med = classe_med;
     }
 
     public String getDescription_med() {
