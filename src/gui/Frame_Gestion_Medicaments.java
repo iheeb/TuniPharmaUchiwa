@@ -6,17 +6,180 @@ package gui;
 
 import dao.MedicamentsDAO;
 import entities.Medicaments;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Arrays;
+import java.util.EventObject;
+import java.util.List;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /**
  *
  * @author HoussemEddine
  */
+
 public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
     
     /**
      * Creates new form Frame_Gestion_Medicaments
      */
+    public void RemoveMedicament(){
+        
+        MedicamentsDAO meddao = new MedicamentsDAO();
+        //Insérer le Stock
+        meddao.deleteMedicament(Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
+        
+        //Afficher un message de confirmation
+        JOptionPane.showMessageDialog(this, "Suppression effectué avec succès");
+        
+    }
+    class ButtonsPanel extends JPanel {
+    public final List<JButton> buttons = Arrays.asList(new JButton("view"), new JButton("edit"));
+    public ButtonsPanel() {
+        super();
+        setOpaque(true);
+        for(JButton b: buttons) {
+            b.setFocusable(false);
+            b.setRolloverEnabled(false);
+            add(b);
+        }
+    }
+    }
+    class ButtonsEditor extends ButtonsPanel implements TableCellEditor {
+    transient protected ChangeEvent changeEvent = null;
+
+    public ButtonsEditor(final JTable table) {
+        super();
+        //---->
+        //DEBUG: view button click -> control key down + edit button(same cell) press -> remain selection color
+        MouseListener ml = new MouseAdapter() {
+            @Override public void mousePressed(MouseEvent e) {
+                ButtonModel m = ((JButton)e.getSource()).getModel();
+                if(m.isPressed() && table.isRowSelected(table.getEditingRow()) && e.isControlDown()) {
+                    setBackground(table.getBackground());
+                }
+            }
+        };
+        buttons.get(0).addMouseListener(ml);
+        buttons.get(1).addMouseListener(ml);
+        //<----
+
+        buttons.get(0).addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                fireEditingStopped();
+                RemoveMedicament();
+        jTable1.setModel(new tables.Table_Medicament());
+        TableColumn column = jTable1.getColumnModel().getColumn(6);
+        column.setCellRenderer(new ButtonsRenderer());
+        column.setCellEditor(new ButtonsEditor(jTable1));
+            }
+        });
+
+        buttons.get(1).addActionListener(new ActionListener() {
+            @Override public void actionPerformed(ActionEvent e) {
+                //Object o = table.getModel().getValueAt(table.getSelectedRow(), 0);
+                int row = table.convertRowIndexToModel(table.getEditingRow());
+                Object o = table.getModel().getValueAt(row, 0);
+                fireEditingStopped();
+                JOptionPane.showMessageDialog(table, "Editing: "+o);
+            }
+        });
+
+        addMouseListener(new MouseAdapter() {
+            @Override public void mousePressed(MouseEvent e) {
+                fireEditingStopped();
+            }
+        });
+    }
+    @Override public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        this.setBackground(table.getSelectionBackground());
+        return this;
+    }
+    @Override public Object getCellEditorValue() {
+        return "";
+    }
+
+    //Copid from AbstractCellEditor
+    //protected EventListenerList listenerList = new EventListenerList();
+    //transient protected ChangeEvent changeEvent = null;
+    @Override public boolean isCellEditable(EventObject e) {
+        return true;
+    }
+    @Override public boolean shouldSelectCell(EventObject anEvent) {
+        return true;
+    }
+    @Override public boolean stopCellEditing() {
+        fireEditingStopped();
+        return true;
+    }
+    @Override public void cancelCellEditing() {
+        fireEditingCanceled();
+    }
+    @Override public void addCellEditorListener(CellEditorListener l) {
+        listenerList.add(CellEditorListener.class, l);
+    }
+    @Override public void removeCellEditorListener(CellEditorListener l) {
+        listenerList.remove(CellEditorListener.class, l);
+    }
+    public CellEditorListener[] getCellEditorListeners() {
+        return listenerList.getListeners(CellEditorListener.class);
+    }
+    protected void fireEditingStopped() {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for(int i = listeners.length-2; i>=0; i-=2) {
+            if(listeners[i]==CellEditorListener.class) {
+                // Lazily create the event:
+                if(changeEvent == null) {
+                    changeEvent = new ChangeEvent(this);
+                }
+                ((CellEditorListener)listeners[i+1]).editingStopped(changeEvent);
+            }
+        }
+    }
+    
+    protected void fireEditingCanceled() {
+        // Guaranteed to return a non-null array
+        Object[] listeners = listenerList.getListenerList();
+        // Process the listeners last to first, notifying
+        // those that are interested in this event
+        for(int i = listeners.length-2; i>=0; i-=2) {
+            if(listeners[i]==CellEditorListener.class) {
+                // Lazily create the event:
+                if(changeEvent == null) {
+                    changeEvent = new ChangeEvent(this);
+                }
+                ((CellEditorListener)listeners[i+1]).editingCanceled(changeEvent);
+            }
+        }
+    }
+    }
+class ButtonsRenderer extends ButtonsPanel implements TableCellRenderer {
+    public ButtonsRenderer() {
+        super();
+        setName("Table.cellRenderer");
+    }
+    @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        this.setBackground(isSelected?table.getSelectionBackground():table.getBackground());
+        return this;
+    }
+}
+
     public void AddMedicament(){
         Medicaments medicament = new Medicaments();
         MedicamentsDAO meddao = new MedicamentsDAO();
@@ -31,15 +194,7 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
         //Afficher un message de confirmation
         JOptionPane.showMessageDialog(this, "Ajout effectué avec succès");
     }
-    public void RemoveMedicament(){
-        
-        MedicamentsDAO meddao = new MedicamentsDAO();
-        //Insérer le Stock
-        meddao.deleteMedicament(Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
-        //Afficher un message de confirmation
-        JOptionPane.showMessageDialog(this, "Suppression effectué avec succès");
-        
-    }
+    
     public void ModifyMedicament(){
         Medicaments medicament = new Medicaments();
         MedicamentsDAO meddao = new MedicamentsDAO();
@@ -56,9 +211,13 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Modification effectué avec succès");
         
     }
-    
+
     public Frame_Gestion_Medicaments() {
         initComponents();
+        jTable1.setRowHeight(40);
+        TableColumn column = jTable1.getColumnModel().getColumn(6);
+        column.setCellRenderer(new ButtonsRenderer());
+        column.setCellEditor(new ButtonsEditor(jTable1));
     }
 
     /**
@@ -88,8 +247,17 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
         btnSupprimer = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jTable1.setModel(new tables.Table_Medicament());
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -147,6 +315,24 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
 
         jLabel6.setText("Liste des Medicaments :");
 
+        jCheckBox1.setText("jCheckBox1");
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("jLabel7");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,50 +342,70 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1)
-                            .addComponent(btnAjouter))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cb_Classe_med, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cbForme_med, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtReference_med)
-                                    .addComponent(txtNom_med)))
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel3)
+                                    .addComponent(btnAjouter)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel7)
+                                        .addComponent(jLabel1)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(22, 22, 22)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(cb_Classe_med, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(cbForme_med, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtReference_med)
+                                            .addComponent(txtNom_med)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnModifier)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnSupprimer)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(btnClear)))
+                                .addGap(31, 31, 31))
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnModifier)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSupprimer)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnClear)))
-                        .addGap(31, 31, 31))))
+                                .addComponent(jButton1)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(351, 351, 351)
+                .addComponent(jCheckBox1)
+                .addGap(0, 414, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(42, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(txtReference_med, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
+                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(txtNom_med, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNom_med, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
@@ -218,7 +424,7 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
                             .addComponent(btnModifier)
                             .addComponent(btnSupprimer)
                             .addComponent(btnClear)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -228,6 +434,9 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
     private void btnAjouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterActionPerformed
             this.AddMedicament();
             jTable1.setModel(new tables.Table_Medicament());
+            TableColumn column = jTable1.getColumnModel().getColumn(6);
+            column.setCellRenderer(new ButtonsRenderer());
+            column.setCellEditor(new ButtonsEditor(jTable1));
     }//GEN-LAST:event_btnAjouterActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -255,6 +464,26 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
         this.RemoveMedicament();
         jTable1.setModel(new tables.Table_Medicament());
     }//GEN-LAST:event_btnSupprimerActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        for(int i=0;i<jTable1.getRowCount();i++){
+            if(jTable1.getValueAt(i, 7).equals(true)){
+                new dao.MedicamentsDAO().deleteMedicament(Integer.parseInt(jTable1.getValueAt(i, 0).toString()));
+               // jTable1.setModel(new tables.Table_Medicament());
+            }
+            
+        }
+        jTable1.setModel(new tables.Table_Medicament());
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -287,6 +516,7 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Frame_Gestion_Medicaments().setVisible(true);
+                
             }
         });
     }
@@ -297,12 +527,16 @@ public class Frame_Gestion_Medicaments extends javax.swing.JFrame {
     private javax.swing.JButton btnSupprimer;
     private javax.swing.JComboBox cbForme_med;
     private javax.swing.JComboBox cb_Classe_med;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;

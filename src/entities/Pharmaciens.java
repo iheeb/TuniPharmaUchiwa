@@ -23,29 +23,14 @@ public class Pharmaciens {
     private String mail_pharamacien;
     private int etat_pharmacien; 
     private int code_postal_pharmacien;
+    private Boolean chBox;
 
-    public String getReference_pharmacien() {
-        return reference_pharmacien;
+    public Boolean getChBox() {
+        return chBox;
     }
 
-    public void setReference_pharmacien(String reference_pharmacien) {
-        this.reference_pharmacien = reference_pharmacien;
-    }
-
-    public int getEtat_pharmacien() {
-        return etat_pharmacien;
-    }
-
-    public void setEtat_pharmacien(int etat_pharmacien) {
-        this.etat_pharmacien = etat_pharmacien;
-    }
-
-    public int getCode_postal_pharmacien() {
-        return code_postal_pharmacien;
-    }
-
-    public void setCode_postal_pharmacien(int code_postal_pharmacien) {
-        this.code_postal_pharmacien = code_postal_pharmacien;
+    public void setChBox(Boolean chBox) {
+        this.chBox = chBox;
     }
 
     public int getId_pharmacien() {
@@ -70,6 +55,14 @@ public class Pharmaciens {
 
     public void setPrenom_pharmacien(String prenom_pharmacien) {
         this.prenom_pharmacien = prenom_pharmacien;
+    }
+
+    public String getReference_pharmacien() {
+        return reference_pharmacien;
+    }
+
+    public void setReference_pharmacien(String reference_pharmacien) {
+        this.reference_pharmacien = reference_pharmacien;
     }
 
     public int getCin_pharmacien() {
@@ -120,8 +113,6 @@ public class Pharmaciens {
         this.adresse_pharmacien = adresse_pharmacien;
     }
 
-    
-
     public int getNumtel_pahramcien() {
         return numtel_pahramcien;
     }
@@ -129,10 +120,6 @@ public class Pharmaciens {
     public void setNumtel_pahramcien(int numtel_pahramcien) {
         this.numtel_pahramcien = numtel_pahramcien;
     }
-
-    
-
-   
 
     public String getMail_pharamacien() {
         return mail_pharamacien;
@@ -142,6 +129,21 @@ public class Pharmaciens {
         this.mail_pharamacien = mail_pharamacien;
     }
 
-    
+    public int getEtat_pharmacien() {
+        return etat_pharmacien;
+    }
+
+    public void setEtat_pharmacien(int etat_pharmacien) {
+        this.etat_pharmacien = etat_pharmacien;
+    }
+
+    public int getCode_postal_pharmacien() {
+        return code_postal_pharmacien;
+    }
+
+    public void setCode_postal_pharmacien(int code_postal_pharmacien) {
+        this.code_postal_pharmacien = code_postal_pharmacien;
+    }
+
     
 }

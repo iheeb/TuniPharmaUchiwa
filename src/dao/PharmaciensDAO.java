@@ -113,7 +113,7 @@ public class PharmaciensDAO {
 
 
         List<Pharmaciens> listepharmaciens = new ArrayList<Pharmaciens>();
-
+       
         String requete = "select * from pharmaciens";
         try {
            Statement statement = MyConnection.getInstance()
@@ -125,14 +125,20 @@ public class PharmaciensDAO {
                 pharmaciens.setId_pharmacien(resultat.getInt(1));
                 pharmaciens.setNom_pharmacien(resultat.getString(2));
                 pharmaciens.setPrenom_pharmacien(resultat.getString(3));
-                pharmaciens.setLogin_pharmacien(resultat.getString(4));
-                pharmaciens.setPwd_pharmacien(resultat.getString(5));
-                pharmaciens.setDiplome_pharmacien(resultat.getString(6));              
-                pharmaciens.setCin_pharmacien(resultat.getInt(7));
-                pharmaciens.setDate_naiss_pharmacien(resultat.getString(8));
-                pharmaciens.setAdresse_pharmacien(resultat.getString(9));
-                pharmaciens.setNumtel_pahramcien(resultat.getInt(10));
-                pharmaciens.setMail_pharamacien(resultat.getString(11));
+                pharmaciens.setReference_pharmacien(resultat.getString(4));
+                pharmaciens.setLogin_pharmacien(resultat.getString(5));
+                pharmaciens.setPwd_pharmacien(resultat.getString(6));
+                pharmaciens.setMail_pharamacien(resultat.getString(7));
+                pharmaciens.setDiplome_pharmacien(resultat.getString(8));              
+                pharmaciens.setCin_pharmacien(resultat.getInt(9));
+                pharmaciens.setDate_naiss_pharmacien(resultat.getString(10));
+                pharmaciens.setNumtel_pahramcien(resultat.getInt(11));
+                pharmaciens.setAdresse_pharmacien(resultat.getString(12));
+                pharmaciens.setCode_postal_pharmacien(resultat.getInt(13));
+                pharmaciens.setEtat_pharmacien(resultat.getInt(14));
+               // pharmaciens.setChBox(Boolean.FALSE);
+                
+                
                  
                 listepharmaciens.add(pharmaciens);
             }

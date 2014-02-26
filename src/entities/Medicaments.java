@@ -16,6 +16,15 @@ public class Medicaments {
     private String classe_med;
     private String description_med;
     private String forme_med;
+    private Boolean chBox;
+
+    public Boolean getChBox() {
+        return chBox;
+    }
+
+    public void setChBox(Boolean chBox) {
+        this.chBox = chBox;
+    }
 
     public int getId_med() {
         return id_med;

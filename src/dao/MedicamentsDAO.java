@@ -89,6 +89,7 @@ public class MedicamentsDAO {
                 medicaments.setClasse_med(resultat.getString(4));
                 medicaments.setDescription_med(resultat.getString(5));
                 medicaments.setForme_med(resultat.getString(6));
+                medicaments.setChBox(Boolean.FALSE);
 
                 listemedicaments.add(medicaments);
             }
