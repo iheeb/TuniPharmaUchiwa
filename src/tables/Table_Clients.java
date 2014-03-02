@@ -19,7 +19,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class Table_Clients extends AbstractTableModel {
     List<Clients> listeClients = new ArrayList<Clients>();
-    String []header = {"Id","Nom","Prénom","Login","Mot de Passe","E-Mail","Pays","Adresse","Code Postal","",""};
+    String []header = {"Id","Nom","Prénom","Login","Mot de Passe","E-Mail","Pays","Adresse","Code Postal","Supprimer","X"};
     int i=0;
     Object[][] data;
     Boolean chB=new Boolean(false);
@@ -36,7 +36,7 @@ public class Table_Clients extends AbstractTableModel {
             data[i][5]=p.getMail_clt();
             data[i][6]=p.getPays_clt();
             data[i][7]=p.getAdresse_clt();
-            data[i][8]=p.getCode_potal_clt();
+            data[i][8]=p.getCode_postal_clt();
             data[i][9]="";
             data[i][10]=chB;
             i++;

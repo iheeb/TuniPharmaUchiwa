@@ -18,7 +18,7 @@ public class Clients {
     private String mail_clt;
     private String pays_clt;
     private String adresse_clt;
-    private int code_potal_clt;
+    private int code_postal_clt;
 
     public int getId_clt() {
         return id_clt;
@@ -68,12 +68,12 @@ public class Clients {
         this.adresse_clt = adresse_clt;
     }
 
-    public int getCode_potal_clt() {
-        return code_potal_clt;
+    public int getCode_postal_clt() {
+        return code_postal_clt;
     }
 
-    public void setCode_potal_clt(int code_potal_clt) {
-        this.code_potal_clt = code_potal_clt;
+    public void setCode_postal_clt(int code_postal_clt) {
+        this.code_postal_clt = code_postal_clt;
     }
 
     public String getLogin_clt() {

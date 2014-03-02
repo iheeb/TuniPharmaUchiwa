@@ -72,6 +72,17 @@ public class PharmaciensDAO {
             System.out.println("erreur lors de la mise à jour "+ex.getMessage());
         }
     }
+    public void updateEtatPharmaciens(int id){
+        String requete = "update Pharmaciens set etat=1 where id_phar="+id;
+        try {
+            PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);
+            ps.executeUpdate();
+            System.out.println("Mise à jour effectuée avec succès");
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors de la mise à jour "+ex.getMessage());
+        }
+    }
      public void deletePharmaciens(int id){
         String requete = "delete from Pharmaciens where id_phar=?";
         try {
@@ -109,12 +120,88 @@ public class PharmaciensDAO {
             return null;
         }
     }
-    public List<Pharmaciens> DisplayAllPharmaciens (){
+     public List<String> sendMailPharmaciens (String mail,String ref){
+
+
+        List<String> logmp = new ArrayList<String>();
+
+        String requete = "select nom,prenom,login,pwd from pharmaciens where mail='"+mail+"' and reference_ph='"+ref+"'";
+        try {
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+
+            while(resultat.next()){
+                logmp.add(resultat.getString(1));
+                logmp.add(resultat.getString(2));
+                logmp.add(resultat.getString(3));
+                logmp.add(resultat.getString(4));
+            }
+            return logmp;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement de pharmacien "+ex.getMessage());
+            return null;
+        }
+    }
+     public int DisplayPharmaciensAtt (){
+        int i=0;
+
+        String requete = "select count(id_phar) as rowcount from pharmaciens where etat=0";
+        try {
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+
+            
+                resultat.next();
+                i = resultat.getInt("rowcount") ;
+                resultat.close() ;
+            return i;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement des pharmacies "+ex.getMessage());
+            return 0;
+        }
+    }
+    public List<Pharmaciens> DisplayDemandePharmaciens (int v){
 
 
         List<Pharmaciens> listepharmaciens = new ArrayList<Pharmaciens>();
        
-        String requete = "select * from pharmaciens";
+        String requete = "select id_phar,nom,prenom,reference_ph,mail,etat from pharmaciens where etat="+v;
+        try {
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+
+            while(resultat.next()){
+                Pharmaciens pharmaciens =new Pharmaciens();
+                pharmaciens.setId_pharmacien(resultat.getInt(1));
+                pharmaciens.setNom_pharmacien(resultat.getString(2));
+                pharmaciens.setPrenom_pharmacien(resultat.getString(3));
+                pharmaciens.setReference_pharmacien(resultat.getString(4));
+                pharmaciens.setMail_pharamacien(resultat.getString(5));
+                pharmaciens.setEtat_pharmacien(resultat.getInt(6));
+               // pharmaciens.setChBox(Boolean.FALSE);
+                
+                
+                 
+                listepharmaciens.add(pharmaciens);
+            }
+            return listepharmaciens;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement des Pharmaciens "+ex.getMessage());
+            return null;
+        }
+    }
+    public List<Pharmaciens> DisplayAllPharmaciens (int v){
+
+
+        List<Pharmaciens> listepharmaciens = new ArrayList<Pharmaciens>();
+       
+        String requete = "select * from pharmaciens where etat="+v;
         try {
            Statement statement = MyConnection.getInstance()
                    .createStatement();
@@ -135,11 +222,7 @@ public class PharmaciensDAO {
                 pharmaciens.setNumtel_pahramcien(resultat.getInt(11));
                 pharmaciens.setAdresse_pharmacien(resultat.getString(12));
                 pharmaciens.setCode_postal_pharmacien(resultat.getInt(13));
-                pharmaciens.setEtat_pharmacien(resultat.getInt(14));
-               // pharmaciens.setChBox(Boolean.FALSE);
-                
-                
-                 
+                pharmaciens.setEtat_pharmacien(resultat.getInt(14));         
                 listepharmaciens.add(pharmaciens);
             }
             return listepharmaciens;

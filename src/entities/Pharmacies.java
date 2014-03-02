@@ -11,6 +11,7 @@ package entities;
 public class Pharmacies {
     
     private int id_ph;
+    private String ref_ph;
     private String nom_ph;
     private String adresse_ph;
     private int num_tel;
@@ -20,6 +21,14 @@ public class Pharmacies {
     private String gouvernorat;
     private String delegation;
     private String localite;
+
+    public String getRef_ph() {
+        return ref_ph;
+    }
+
+    public void setRef_ph(String ref_ph) {
+        this.ref_ph = ref_ph;
+    }
     
 
 

@@ -18,12 +18,7 @@ public class Table_Rech_Medicament extends AbstractTableModel {
     List<Medicaments> listMedicament = new ArrayList<Medicaments>();
     String []header = {"id","Référence","Nom","Catégorie","Description","Forme"};
 
-    public Table_Rech_Medicament(String nom,String classe) { //remplissage de la liste des medicaments
-        listMedicament=new MedicamentsDAO().RechercheParNom_Classe(nom, classe);
-    }
-    public Table_Rech_Medicament(String classe) { //remplissage de la liste des medicaments
-        listMedicament=new MedicamentsDAO().RecherchePar_Classe(classe);
-    }
+    
     
     public int getRowCount() { //nombre de lignes de la table
         return listMedicament.size();

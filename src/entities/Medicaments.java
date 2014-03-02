@@ -16,14 +16,23 @@ public class Medicaments {
     private String classe_med;
     private String description_med;
     private String forme_med;
-    private Boolean chBox;
+    private String image_med;
+    private int qte;
 
-    public Boolean getChBox() {
-        return chBox;
+    public int getQte() {
+        return qte;
     }
 
-    public void setChBox(Boolean chBox) {
-        this.chBox = chBox;
+    public void setQte(int qte) {
+        this.qte = qte;
+    }
+
+    public String getImage_med() {
+        return image_med;
+    }
+
+    public void setImage_med(String image_med) {
+        this.image_med = image_med;
     }
 
     public int getId_med() {

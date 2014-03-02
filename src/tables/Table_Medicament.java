@@ -6,6 +6,7 @@ package tables;
 
 import dao.MedicamentsDAO;
 import entities.Medicaments;
+import entities.Pharmaciens;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,56 +27,97 @@ import javax.swing.table.AbstractTableModel;
 public class Table_Medicament extends AbstractTableModel implements TableModelListener {
     
     List<Medicaments> listMedicament = new ArrayList<Medicaments>();
-    
-    String []header = {"id","Référence","Nom","Classe","Description","Forme","knk","bouton"};
+    int i=0;
+    Boolean chB=new Boolean(false);
+    Object[][] data;
+    String []header = {"id","Référence","Nom","Classe","Description","Forme","X","","Quantité","image"};
     
     
 
     public Table_Medicament() { //remplissage de la liste des medicaments
         listMedicament= new MedicamentsDAO().DisplayAllMedicaments();
-        this.addTableModelListener(this);
+        data=new Object[listMedicament.size()][header.length];
+        for(Medicaments p:listMedicament){
+            data[i][0]=p.getId_med();
+            data[i][1]=p.getReference_med();
+            data[i][2]=p.getNom_med();    
+            data[i][3]=p.getClasse_med();  
+            data[i][4]=p.getDescription_med();
+            data[i][5]=p.getForme_med();
+            data[i][6]=chB;
+            data[i][7]="";
+            data[i][8]=p.getQte();
+            data[i][9]=p.getImage_med();
+            i++;           
+        }
     }
-    
-    public int getRowCount() { //nombre de lignes de la table
-        return listMedicament.size();
+    public Table_Medicament(int id) { //remplissage de la liste des medicaments
+        listMedicament= new MedicamentsDAO().DisplayMedicamentsPharmacie(id);
+        data=new Object[listMedicament.size()][header.length];
+        for(Medicaments p:listMedicament){
+            data[i][0]=p.getId_med();
+            data[i][1]=p.getReference_med();
+            data[i][2]=p.getNom_med();    
+            data[i][3]=p.getClasse_med();  
+            data[i][4]=p.getDescription_med();
+            data[i][5]=p.getForme_med();
+            data[i][6]=chB;
+            data[i][7]="";
+            data[i][8]=p.getQte();
+            data[i][9]=p.getImage_med();
+            i++;           
+        }
+    }
+  public Table_Medicament(int id,String nom) { //remplissage de la liste des medicaments
+        listMedicament= new MedicamentsDAO().DisplayMedicamentsPharmacie_parNom(id, nom);
+        data=new Object[listMedicament.size()][header.length];
+        for(Medicaments p:listMedicament){
+            data[i][0]=p.getId_med();
+            data[i][1]=p.getReference_med();
+            data[i][2]=p.getNom_med();    
+            data[i][3]=p.getClasse_med();  
+            data[i][4]=p.getDescription_med();
+            data[i][5]=p.getForme_med();
+            data[i][6]=chB;
+            data[i][7]="";
+            data[i][8]=p.getQte();
+            data[i][9]=p.getImage_med();
+            i++;           
+        }
     }
 
+    //récupération de chaque élément de la table
+   
+    
+   @Override
+    public int getRowCount() { //nombre de lignes de la table
+        return data.length;
+    }
+
+    @Override
     public int getColumnCount() { //nombre de colonnes de la table
         return header.length;
     }
-   
+     
     public Class getColumnClass(int columnIndex) {
+         
         return getValueAt(0, columnIndex).getClass();
     }
 
     //récupération de chaque élément de la table
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) { 
-        switch (columnIndex) {// parcour par colonne
-            case 0://colonne id du pharmacie 
-                return listMedicament.get(rowIndex).getId_med();
-            case 1://colonne nom
-                return listMedicament.get(rowIndex).getReference_med();
-            case 2://colonne adresse
-                return listMedicament.get(rowIndex).getNom_med();
-            case 3://colonne numero de telephone 
-                return listMedicament.get(rowIndex).getClasse_med();          
-            case 4://colonne altitude
-                return listMedicament.get(rowIndex).getDescription_med();
-            case 5://colonne type de pharmacie
-                return listMedicament.get(rowIndex).getForme_med();
-            case 6:
-                
-                   //  return   this.get(rowIndex);
-            case 7://colonne type de pharmacie
-                return listMedicament.get(rowIndex).getChBox(); 
-            default:
-                return null;
-        }
+        return data[rowIndex][columnIndex];     
     }
     
-   public boolean isCellEditable(int row, int col) {   
-            return true;    
+     @Override
+    public boolean isCellEditable(int row, int col) {   
+            if(col>5)
+                return true;
+            else
+        return false;    
     }
+     @Override
      public String getColumnName(int column) { // retourne les noms des colonnes
         return header[column]; 
     }
@@ -83,27 +125,9 @@ public class Table_Medicament extends AbstractTableModel implements TableModelLi
     public void tableChanged(TableModelEvent e) {
         
     }
+    
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        switch (columnIndex) {// parcour par colonne
-            case 0://colonne id du pharmacie 
-                listMedicament.get(rowIndex).setId_med((int) value);      
-            case 1://colonne nom
-                listMedicament.get(rowIndex).setReference_med((String) value);         
-            case 2://colonne adresse
-                listMedicament.get(rowIndex).setNom_med((String) value);        
-            case 3://colonne numero de telephone 
-                listMedicament.get(rowIndex).setClasse_med((String) value);       
-            case 4://colonne altitude
-                listMedicament.get(rowIndex).setDescription_med((String) value);       
-            case 5://colonne type de pharmacie
-                listMedicament.get(rowIndex).setForme_med((String) value);        
-            case 7://colonne type de pharmacie
-                if(value.toString().equals("true"))
-               listMedicament.get(rowIndex).setChBox(true); 
-                else
-                    listMedicament.get(rowIndex).setChBox(false);                 
-        }
-       
+        data[rowIndex][columnIndex] = value;    
         fireTableCellUpdated(rowIndex, columnIndex);        
     }
     

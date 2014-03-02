@@ -56,7 +56,6 @@ public class Frame_Gestion_Pharmaciens extends javax.swing.JFrame {
         });
 
         jTable3.setBackground(new java.awt.Color(59, 232, 16));
-        jTable3.setModel(new tables.Table_Liste_Pharmacien());
         jScrollPane3.setViewportView(jTable3);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -73,7 +72,7 @@ public class Frame_Gestion_Pharmaciens extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,6 +89,11 @@ public class Frame_Gestion_Pharmaciens extends javax.swing.JFrame {
         jTabbedPane2.addTab("List des Pharmaciens", jPanel2);
 
         jButton3.setText("Accepter");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Refuser");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -107,7 +111,7 @@ public class Frame_Gestion_Pharmaciens extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addGap(62, 62, 62)
                 .addComponent(jButton4)
-                .addContainerGap(534, Short.MAX_VALUE))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -148,6 +152,10 @@ public class Frame_Gestion_Pharmaciens extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

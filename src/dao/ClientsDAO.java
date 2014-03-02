@@ -19,6 +19,30 @@ import util.MyConnection;
  */
 public class ClientsDAO {
     
+    public void insertClients(Clients clt){
+
+        String requete = "insert into clients (nom_clt,prenom_clt,login,pwd,mail,pays,adresse,code_postal) values (?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);
+            ps.setString(1, clt.getNom_clt());
+            ps.setString(2, clt.getPrenom_clt());
+            ps.setString(3, clt.getLogin_clt());
+            ps.setString(4, clt.getPwd_clt());
+            ps.setString(5, clt.getMail_clt());
+            ps.setString(6, clt.getPays_clt());
+            ps.setString(7, clt.getAdresse_clt());
+            ps.setInt(8, clt.getCode_postal_clt());
+            
+              
+              
+                    
+            ps.executeUpdate();
+            System.out.println("Ajout  client effectuée avec succès");
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors de l'insertion  de client"+ex.getMessage());
+        }
+    }
     
      public List<Clients> GetAllClients (){
 
@@ -41,7 +65,7 @@ public class ClientsDAO {
                 client.setMail_clt(resultat.getString(6));
                 client.setPays_clt(resultat.getString(7));
                 client.setAdresse_clt(resultat.getString(8));
-                client.setCode_potal_clt(resultat.getInt(9));
+                client.setCode_postal_clt(resultat.getInt(9));
                 
                 
 

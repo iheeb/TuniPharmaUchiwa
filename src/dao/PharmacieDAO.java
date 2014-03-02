@@ -21,19 +21,21 @@ import util.MyConnection;
 public class PharmacieDAO {
     
      public void insertPharmacie(Pharmacies ph){
-    String requete = "insert into pharmacies(nom_ph,adresse_ph,num_tel,longitude,attitude,type_ph,gouvernorat,delegation,localite) values (?,?,?,?,?)";
+    String requete = "insert into pharmacies(ref,nom_ph,adresse_ph,num_tel,longitude,attitude,type_ph,gouvernorat,delegation,localite) values (?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);
             
+            ps.setString(1, ph.getRef_ph());
             ps.setString(2, ph.getNom_ph());
             ps.setString(3, ph.getAdresse_ph());
             ps.setInt(4, ph.getNum_tel());
             ps.setFloat(5, ph.getLongitude());
-            ps.setFloat(3, ph.getAltitude());
-            ps.setString(3, ph.getType_ph());
-            ps.setString(3, ph.getGouvernorat());
-            ps.setString(3, ph.getDelegation());
-            ps.setString(3, ph.getLocalite());
+            ps.setFloat(6, ph.getAltitude());
+            ps.setString(7, ph.getType_ph());
+            ps.setString(8, ph.getGouvernorat());
+            ps.setString(9, ph.getDelegation());
+            ps.setString(10, ph.getLocalite());
+            
             ps.executeUpdate();
             System.out.println("Ajout effectuée avec succès");
         } catch (SQLException ex) {
@@ -46,20 +48,21 @@ public class PharmacieDAO {
      
      
       public void updatePharmacie(Pharmacies ph){
-        String requete = "update Pharmacies set  nom_ph=?,adresse_ph= ?,num_tel=?,longitude=?,attitude=?,type_ph=?,gouvernorat=?,delegation=?,localite=? where id_ph =?";
+        String requete = "update Pharmacies set ref=?  nom_ph=?,adresse_ph= ?,num_tel=?,longitude=?,attitude=?,type_ph=?,gouvernorat=?,delegation=?,localite=? where id_ph =?";
         try {
             PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);
              
-            ps.setString(1, ph.getNom_ph());
-            ps.setString(2, ph.getAdresse_ph());
-            ps.setInt(3, ph.getNum_tel());
-            ps.setFloat(4, ph.getLongitude());
-            ps.setFloat(5, ph.getAltitude());
-            ps.setString(6, ph.getType_ph());
-            ps.setString(7, ph.getGouvernorat());
-            ps.setString(8, ph.getDelegation());
-            ps.setString(9, ph.getLocalite());
-            ps.setInt(10, ph.getId_ph());
+            ps.setString(1, ph.getRef_ph());
+            ps.setString(2, ph.getNom_ph());
+            ps.setString(3, ph.getAdresse_ph());
+            ps.setInt(4, ph.getNum_tel());
+            ps.setFloat(5, ph.getLongitude());
+            ps.setFloat(6, ph.getAltitude());
+            ps.setString(7, ph.getType_ph());
+            ps.setString(8, ph.getGouvernorat());
+            ps.setString(9, ph.getDelegation());
+            ps.setString(10, ph.getLocalite());
+            ps.setInt(11, ph.getId_ph());
             ps.executeUpdate();
             System.out.println("Mise à jour effectuée avec succès");
         } catch (SQLException ex) {
@@ -96,15 +99,16 @@ public class PharmacieDAO {
             while(resultat.next()){
                 Pharmacies pharmacies =new Pharmacies();
                 pharmacies.setId_ph(resultat.getInt(1));
-                pharmacies.setNom_ph(resultat.getString(2));
-                pharmacies.setAdresse_ph(resultat.getString(3));
-                pharmacies.setNum_tel(resultat.getInt(4));
-                pharmacies.setLongitude(resultat.getFloat(5));
-                pharmacies.setAltitude(resultat.getFloat(6));
-                pharmacies.setType_ph(resultat.getString(7));
-                pharmacies.setGouvernorat(resultat.getString(8));
-                pharmacies.setDelegation(resultat.getString(9));
-                pharmacies.setLocalite(resultat.getString(10));
+                pharmacies.setRef_ph(resultat.getString(2));
+                pharmacies.setNom_ph(resultat.getString(3));
+                pharmacies.setAdresse_ph(resultat.getString(4));
+                pharmacies.setNum_tel(resultat.getInt(5));
+                pharmacies.setLongitude(resultat.getFloat(6));
+                pharmacies.setAltitude(resultat.getFloat(7));
+                pharmacies.setType_ph(resultat.getString(8));
+                pharmacies.setGouvernorat(resultat.getString(9));
+                pharmacies.setDelegation(resultat.getString(10));
+                pharmacies.setLocalite(resultat.getString(11));
                 
                 listepharmacies.add(pharmacies);
             }
@@ -115,6 +119,7 @@ public class PharmacieDAO {
             return null;
         }
     }
+     
     
      
      //  methode 
@@ -131,15 +136,16 @@ public class PharmacieDAO {
             while(resultat.next()){
                  Pharmacies pharmacies =new Pharmacies();
                 pharmacies.setId_ph(resultat.getInt(1));
-                pharmacies.setNom_ph(resultat.getString(2));
-                pharmacies.setAdresse_ph(resultat.getString(3));
-                pharmacies.setNum_tel(resultat.getInt(4));
-                pharmacies.setLongitude(resultat.getFloat(5));
-                pharmacies.setAltitude(resultat.getFloat(6));
-                pharmacies.setType_ph(resultat.getString(7));
-                pharmacies.setGouvernorat(resultat.getString(8));
-                pharmacies.setDelegation(resultat.getString(9));
-                pharmacies.setLocalite(resultat.getString(10));
+                pharmacies.setRef_ph(resultat.getString(2));
+                pharmacies.setNom_ph(resultat.getString(3));
+                pharmacies.setAdresse_ph(resultat.getString(4));
+                pharmacies.setNum_tel(resultat.getInt(5));
+                pharmacies.setLongitude(resultat.getFloat(6));
+                pharmacies.setAltitude(resultat.getFloat(7));
+                pharmacies.setType_ph(resultat.getString(8));
+                pharmacies.setGouvernorat(resultat.getString(9));
+                pharmacies.setDelegation(resultat.getString(10));
+                pharmacies.setLocalite(resultat.getString(11));
                 
                 listepharmacies.add(pharmacies);
             }
@@ -165,15 +171,16 @@ public class PharmacieDAO {
             while(resultat.next()){
                  Pharmacies pharmacies =new Pharmacies();
                 pharmacies.setId_ph(resultat.getInt(1));
-                pharmacies.setNom_ph(resultat.getString(2));
-                pharmacies.setAdresse_ph(resultat.getString(3));
-                pharmacies.setNum_tel(resultat.getInt(4));
-                pharmacies.setLongitude(resultat.getFloat(5));
-                pharmacies.setAltitude(resultat.getFloat(6));
-                pharmacies.setType_ph(resultat.getString(7));
-                pharmacies.setGouvernorat(resultat.getString(8));
-                pharmacies.setDelegation(resultat.getString(9));
-                pharmacies.setLocalite(resultat.getString(10));
+                pharmacies.setRef_ph(resultat.getString(2));
+                pharmacies.setNom_ph(resultat.getString(3));
+                pharmacies.setAdresse_ph(resultat.getString(4));
+                pharmacies.setNum_tel(resultat.getInt(5));
+                pharmacies.setLongitude(resultat.getFloat(6));
+                pharmacies.setAltitude(resultat.getFloat(7));
+                pharmacies.setType_ph(resultat.getString(8));
+                pharmacies.setGouvernorat(resultat.getString(9));
+                pharmacies.setDelegation(resultat.getString(10));
+                pharmacies.setLocalite(resultat.getString(11));
                 
                 listepharmacies.add(pharmacies);
             }
@@ -200,15 +207,16 @@ public class PharmacieDAO {
             while(resultat.next()){
                  Pharmacies pharmacies =new Pharmacies();
                 pharmacies.setId_ph(resultat.getInt(1));
-                pharmacies.setNom_ph(resultat.getString(2));
-                pharmacies.setAdresse_ph(resultat.getString(3));
-                pharmacies.setNum_tel(resultat.getInt(4));
-                pharmacies.setLongitude(resultat.getFloat(5));
-                pharmacies.setAltitude(resultat.getFloat(6));
-                pharmacies.setType_ph(resultat.getString(7));
-                pharmacies.setGouvernorat(resultat.getString(8));
-                pharmacies.setDelegation(resultat.getString(9));
-                pharmacies.setLocalite(resultat.getString(10));
+                pharmacies.setRef_ph(resultat.getString(2));
+                pharmacies.setNom_ph(resultat.getString(3));
+                pharmacies.setAdresse_ph(resultat.getString(4));
+                pharmacies.setNum_tel(resultat.getInt(5));
+                pharmacies.setLongitude(resultat.getFloat(6));
+                pharmacies.setAltitude(resultat.getFloat(7));
+                pharmacies.setType_ph(resultat.getString(8));
+                pharmacies.setGouvernorat(resultat.getString(9));
+                pharmacies.setDelegation(resultat.getString(10));
+                pharmacies.setLocalite(resultat.getString(11));
                 
                 listepharmacies.add(pharmacies);
             }
@@ -220,7 +228,29 @@ public class PharmacieDAO {
         }
 
        }
+       
+       public String RechercheRef (String ref ){
+        
+           String refer="";
 
+        String requete = "select ref from pharmacies where ref ='"+ref+"'";
+        try {
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
+            ResultSet resultat = statement.executeQuery(requete);
+
+            while(resultat.next()){
+                 
+                refer=resultat.getString(1);
+               
+            }
+            return refer;
+        } catch (SQLException ex) {
+           //Logger.getLogger(PersonneDao.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("erreur lors du chargement des medicaments "+ex.getMessage());
+            return null;
+        }
+       }
 
      
 }

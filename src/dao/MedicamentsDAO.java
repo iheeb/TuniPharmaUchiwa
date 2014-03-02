@@ -21,7 +21,7 @@ public class MedicamentsDAO {
     
     public void insertMedicament(Medicaments m){
 
-        String requete = "insert into medicaments (reference,nom,classe,description,forme) values (?,?,?,?,?)";
+        String requete = "insert into medicaments (reference,nom,classe,description,forme,image) values (?,?,?,?,?)";
         try {
             PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);      
             ps.setString(1, m.getReference_med());
@@ -29,6 +29,8 @@ public class MedicamentsDAO {
             ps.setString(3, m.getClasse_med());
             ps.setString(4, m.getDescription_med());
             ps.setString(5, m.getForme_med());
+            ps.setString(6, m.getImage_med());
+            ps.setInt(7, m.getQte());
             ps.executeUpdate();
             System.out.println("Ajout effectuée avec succès");
         } catch (SQLException ex) {
@@ -39,7 +41,7 @@ public class MedicamentsDAO {
 
 
     public void updateMedicament(Medicaments m){
-        String requete = "update medicaments set reference=?,nom=?,classe=?,description=?,forme=? where id_med=?";
+        String requete = "update medicaments set reference=?,nom=?,classe=?,description=?,forme=?,image=?,qte=? where id_med=?";
         try {
             PreparedStatement ps = MyConnection.getInstance().prepareStatement(requete);
             ps.setString(1, m.getReference_med());
@@ -47,7 +49,10 @@ public class MedicamentsDAO {
             ps.setString(3, m.getClasse_med());
             ps.setString(4, m.getDescription_med());
             ps.setString(5, m.getForme_med());
-            ps.setInt(6, m.getId_med());
+            ps.setString(6, m.getImage_med());
+            ps.setInt(7, m.getQte());
+            ps.setInt(8, m.getId_med());
+            
             ps.executeUpdate();
             System.out.println("Mise à jour effectuée avec succès");
         } catch (SQLException ex) {
@@ -89,7 +94,8 @@ public class MedicamentsDAO {
                 medicaments.setClasse_med(resultat.getString(4));
                 medicaments.setDescription_med(resultat.getString(5));
                 medicaments.setForme_med(resultat.getString(6));
-                medicaments.setChBox(Boolean.FALSE);
+                medicaments.setImage_med(resultat.getString(7));
+                medicaments.setQte(resultat.getInt(8));
 
                 listemedicaments.add(medicaments);
             }
@@ -101,13 +107,13 @@ public class MedicamentsDAO {
         }
     }
     
-    //  methode 
-       public List<Medicaments> RechercheParNom_Classe(String nom,String classe){
+    //Rechercher les medicaments d'une pharmacie selectionné
+    public List<Medicaments> DisplayMedicamentsPharmacie (int id){
 
-   
-  List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
 
-        String requete = "select * from medicaments where nom ='"+nom+"' AND classe='"+classe+"'";
+        List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
+
+        String requete = "SELECT * FROM medicaments WHERE id_med IN (SELECT id_med FROM med_phar WHERE id_phar ="+id+")";
         try {
            Statement statement = MyConnection.getInstance()
                    .createStatement();
@@ -118,9 +124,11 @@ public class MedicamentsDAO {
                 medicaments.setId_med(resultat.getInt(1));
                 medicaments.setReference_med(resultat.getString(2));
                 medicaments.setNom_med(resultat.getString(3));
-                medicaments.setClasse_med(resultat.getString(4).trim());
+                medicaments.setClasse_med(resultat.getString(4));
                 medicaments.setDescription_med(resultat.getString(5));
                 medicaments.setForme_med(resultat.getString(6));
+                medicaments.setImage_med(resultat.getString(7));
+                medicaments.setQte(resultat.getInt(8));
 
                 listemedicaments.add(medicaments);
             }
@@ -130,27 +138,29 @@ public class MedicamentsDAO {
             System.out.println("erreur lors du chargement des medicaments "+ex.getMessage());
             return null;
         }
+    }
+    public List<Medicaments> DisplayMedicamentsPharmacie_parNom(int id,String nom){
 
-       }
-       public List<Medicaments> RecherchePar_Classe(String classe){
 
-   
-  List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
+        List<Medicaments> listemedicaments = new ArrayList<Medicaments>();
 
-        String requete = "select * from medicaments where classe='"+classe+"'";
+        String requete = "SELECT * FROM medicaments WHERE id_med IN (SELECT id_med FROM med_phar WHERE id_phar ="+id+") and nom='"+nom+"'";
         try {
-           Statement statement = MyConnection.getInstance().createStatement();
+           Statement statement = MyConnection.getInstance()
+                   .createStatement();
             ResultSet resultat = statement.executeQuery(requete);
-          //  
-            while(resultat.next()){ 
+
+            while(resultat.next()){
                 Medicaments medicaments =new Medicaments();
                 medicaments.setId_med(resultat.getInt(1));
                 medicaments.setReference_med(resultat.getString(2));
                 medicaments.setNom_med(resultat.getString(3));
-                medicaments.setClasse_med(resultat.getString(4).trim());
+                medicaments.setClasse_med(resultat.getString(4));
                 medicaments.setDescription_med(resultat.getString(5));
                 medicaments.setForme_med(resultat.getString(6));
-
+                
+                medicaments.setImage_med(resultat.getString(7));
+                medicaments.setQte(resultat.getInt(8));
                 listemedicaments.add(medicaments);
             }
             return listemedicaments;
@@ -159,7 +169,9 @@ public class MedicamentsDAO {
             System.out.println("erreur lors du chargement des medicaments "+ex.getMessage());
             return null;
         }
-
-       }
+    }
+    
+    //  methode 
+       
     
 }
